@@ -23,7 +23,7 @@
 
 header {
     background-color: var(--cor0);
-    padding: 30px;
+    padding: 0px 70px;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -50,14 +50,15 @@ nav > a {
     font-family: var(--fonte-subtitulos);
     color: black;
     font-size: 1.2em;
+    transition: 0.3s;
 }
 
 nav > a:hover {
     background-color: #583610;
     border-radius: 10px;
     color: black;
-    transition-duration: 0.2s;
     text-decoration: underline;
+    transform: scale(1.5);
 }
 
 section.top {
@@ -105,6 +106,30 @@ section.services {
     background-color: lightgray;
     color: black;
     height: 50vh;
+}
+
+@media screen and (max-width: 1080px) {
+    section.services {
+        height: 26vh;
+    }
+}
+
+@media screen and (max-width: 890px) {
+    section.services {
+        height: 40vh;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    section.services {
+        height: 100vh;
+    }
+}
+
+@media screen and (min-width: 1080px) {
+    section.services {
+        height: 50vh;
+    }
 }
 
 header.services h1 {
@@ -162,4 +187,22 @@ article.services {
     display: inline-flex;
     flex-direction: row;
     justify-content: space-between;
+}
+
+#scrollToTopBtn {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    background-color: var(--cor0); /* Substitua pela cor desejada */
+    padding: 10px;
+    background-image: url('../imagens/up-arrow.png');
+    background-size: 40% 40%; /* Ajuste o tamanho da imagem de fundo */
+    background-position: center; /* Centraliza a imagem de fundo no botão */
+    background-repeat: no-repeat;
 }

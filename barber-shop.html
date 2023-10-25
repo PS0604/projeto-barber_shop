@@ -3,26 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="imagens/Barber Shop Logo.png" type="image/x-icon">
     <link rel="stylesheet" href="./assets/style.css">
-    <title>Barber Shop - Your Favorite Barber!</title>
+    <script src="assets/script.js"></script>
+    <title id="pageTitle">Barber Shop - Your Favorite Barber!</title>
 </head>
 <body>
     <header>
-        <h1>Barber Shop</h1>
+        <h1><a href="barber-shop.html"><img src="imagens/Barber Shop Logo150.png" alt="Barber Shop Logo"></a></h1>
         <nav>
-            <a href="#">Home</a>
+            <a href="barber-shop.html">Home</a>
             |
             <a href="#">Book</a>
             |
-            <a href="#">Services</a>
+            <a href="#" id="scrollToServices">Services</a>
             |
-            <a href="#">Contact</a>
+            <a href="contact.html">Contact</a>
         </nav>
     </header>
     <main>
         <section class="top">
             <article>
-                <p>BOOK NOW!</p>
+                <p>MAKE YOUR APPOINTEMENT!</p>
                 <button id="button-book"><a href="#">BOOK</a></button>
             </article>
         </section>
@@ -39,7 +41,7 @@
                             <strong>from 12€</strong></p>
                         <p>Permanently MEN <br>
                             <strong>from 30€</strong></p>
-                        <p>Styling homme - enfant <br>
+                        <p>Styling Men - Kids <br>
                             <strong>from 5€</strong></p>                
                 </article>
             </div>
@@ -62,6 +64,7 @@
         <section class="about-us">
             <h1>About Us</h1>
         </section>
+        <button id="scrollToTopBtn" title="Voltar ao Topo"></button>
     </main>
     <footer>
 
