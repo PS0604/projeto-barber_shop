@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"></script>
+    <title>Appointement Book</title>
+    <style>
+:root {
+            --cor0: #654321;
+            --cor1: #662C22;
+            --cor2: #663822;
+            --cor3: #665622;
+            --cor4: #664E22;
+
+            --main-bg-color: #f2f2f2;
+            --main-font-color: #333;
+            --main-button-bg-color: #4CAF50;
+            --main-button-color: #ffffff;
+            
+            --fonte-titulos: 'Playfair Display', serif, Arial, Helvetica, sans-serif;
+            --fonte-subtitulos: 'Roboto', sans-serif, Arial, Helvetica, sans-serif;
+            --fonte-texto: 'Lora', serif, Arial, Helvetica, sans-serif;
+        }
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap');        
+        /* CSS para o formulário de agendamento */
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-image: url(imagens/foto-appointement.jpg);
+    background-size: cover;
+    background-position: center;
+}
+
+.container {
+    background-color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 280px;
+    width: 290px;
+}
+
+header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+header img {
+    max-width: 105%;
+    height: auto;
+}
+
+form {
+    width: 800px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 30px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-family: 'Orbitron', sans-serif, Arial, Helvetica, sans-serif;
+    font-variant: small-caps;
+}
+
+label {
+    display: block;
+    margin: 10px 0 5px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="date"],
+input[type="datetime-local"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+select {
+    width: calc(103% - 20px);
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background-color: var(--cor0);
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: var(--cor4);
+}
+
+.xdsoft_datetimepicker {
+            font-family: Arial, sans-serif;
+            color: var(--main-font-color);
+            background-color: var(--main-bg-color);
+            width: 100%;
+            max-width: 310px;
+            border-radius: 8px;
+        }
+        
+        .xdsoft_datetimepicker .xdsoft_datepicker {
+            background-color: var(--main-bg-color);
+        }
+        
+        .xdsoft_datetimepicker .xdsoft_timepicker {
+            background-color: var(--cor0);
+        }
+        
+        .xdsoft_datetimepicker .xdsoft_calendar td, .xdsoft_datetimepicker .xdsoft_time_box td {
+            text-align: center;
+        }
+        
+        .xdsoft_datetimepicker .xdsoft_calendar th, .xdsoft_datetimepicker .xdsoft_time_box th {
+            font-weight: normal;
+        }
+        
+        .xdsoft_datetimepicker .xdsoft_calendar td.xdsoft_today, .xdsoft_datetimepicker .xdsoft_time_box td.xdsoft_current {
+            background-color: var(--main-button-bg-color);
+            color: var(--main-button-color);
+        }
+        
+        .xdsoft_datetimepicker .xdsoft_calendar td.xdsoft_today:before, .xdsoft_datetimepicker .xdsoft_time_box td.xdsoft_current:before {
+            background-color: var(--main-button-bg-color);
+        }
+        
+        .xdsoft_datetimepicker .xdsoft_calendar td.xdsoft_disabled, .xdsoft_datetimepicker .xdsoft_time_box td.xdsoft_disabled {
+            background-color: #ddd;
+        }
+
+        label::After {
+            content: '*';
+            color: red;
+        }        
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+        <a href="barber-shop.html"><img src="imagens/Barber Shop Logo400.png" alt="Barber Logo"></a>
+        </div>
+    </header>
+
+    <form action="enviar_agendamento.php" method="post">
+        <h1>Make an Appointement</h1>
+        <label for="nome">Name:</label>
+        <input type="text" id="nome" name="nome" required placeholder="REQUIRED">
+        <label for="email">E-Mail:</label>
+        <input type="email" id="email" name="email" required placeholder="REQUIRED">
+        <label for="datetimepicker">Date & Time:</label><span id="datetimeError" style="color: red;"></span>
+        <input type="text" id="datetimepicker" name="datetime" required placeholder="REQUIRED">
+        <input type="submit" value="Submit">
+    </form>
+
+    <script>
+        $(function() {
+            $('#datetimepicker').datetimepicker({
+                format: 'Y-m-d H:i',
+                formatDate: 'Y-m-d',
+                formatTime: 'H:i',
+                minDate: 0,
+                step: 30,
+                allowTimes: ['9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30']
+            });
+
+            $('form').on('submit', function(e) {
+                var selectedDateTime = $('#datetimepicker').val(); // Use o seletor correto para o campo de data e hora
+                var allowedTimes = ['9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30'];
+
+                if (allowedTimes.indexOf(selectedDateTime.split(' ')[1]) === -1) {
+                    e.preventDefault();
+                    var errorMessage = "Choose a valid Time!";
+                    $('#datetimeError').text(errorMessage).css('color', 'red');
+                } else {
+                    $('#datetimeError').text("");
+                }
+            });
+        });
+    </script>
+</body>
+</html>

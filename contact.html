@@ -5,8 +5,112 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="imagens/Barber Shop Logo.png" type="image/x-icon">
     <title>Contact</title>
+    <style>
+        :root {
+            --cor0: #654321;
+            --cor1: #662C22;
+            --cor2: #663822;
+            --cor3: #665622;
+            --cor4: #664E22;
+            
+            --fonte-titulos: 'Playfair Display', serif, Arial, Helvetica, sans-serif;
+            --fonte-subtitulos: 'Roboto', sans-serif, Arial, Helvetica, sans-serif;
+            --fonte-texto: 'Lora', serif, Arial, Helvetica, sans-serif;
+        }
+
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        form {
+            width: 800px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 30px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-family: var(--fonte-texto);
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        label::After {
+            content: '*';
+            color: red;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        textarea {
+            height: 100px;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background-color: var(--cor0);
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: var(--cor4);
+        }
+    </style>
 </head>
 <body>
-    
+    <header>
+        <a href="barber-shop.html"><img src="imagens/Barber Shop Logo400.png" alt="Barber-shop Logo"></a>
+    </header>
+    <form action="enviar_email.php" method="post">
+        <h1>Contact-Us</h1>
+        <label for="Name">Name:</label><br>
+        <input type="text" id="name" name="Name" required placeholder="REQUIRED"><br><br>
+        <label for="email">E-Mail:</label><br>
+        <input type="email" id="email" name="email" required placeholder="REQUIRED"><br><br>
+        <label for="mensagem">Message:</label><br>
+        <textarea name="mensagem" id="mensagem" cols="50" rows="4" required placeholder="REQUIRED"></textarea><br><br>
+        <input type="submit" value="Submit">
+    </form>
+    <script>
+        window.addEventListener('beforeunload', function (e) {
+            e.preventDefault()
+            e.returnValue = '';
+        });
+    </script>
 </body>
 </html>

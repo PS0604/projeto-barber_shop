@@ -50,7 +50,7 @@ nav > a {
     font-family: var(--fonte-subtitulos);
     color: black;
     font-size: 1.2em;
-    transition: 0.3s;
+    transition: 0s;
 }
 
 nav > a:hover {
@@ -89,16 +89,17 @@ section.top {
 }
 
 #button-book {
+    display: inline-block;
     background-color: var(--cor0);
-    display: flexbox;
-    align-items: center;
     padding: 20px 60px;
     border-radius: 20px;
-    padding: auto;
+    text-decoration: none;
+    color: black;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.63);
 }
 
-#button-book > a {
-    color: black;
+#button-book span {
+    display: block;
 }
 
 section.services {
