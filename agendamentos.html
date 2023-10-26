@@ -3,29 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <title>Agendamentos</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-        }
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+}
 
-        h1 {
-            color: #333;
-            margin-bottom: 20px;
-        }
+h1 {
+    color: #333;
+    margin-bottom: 20px;
+    position: sticky; /* Manter o título fixo durante a rolagem */
+    top: 0; /* Posicionar o título no topo da página */
+    background-color: #f2f2f2; /* Adicionar um plano de fundo para o título */
+    width: 60%; /* Ajustar a largura do título */
+    padding: 10px 0; /* Adicionar preenchimento ao título */
+    border-bottom: 1px solid #ddd; /* Adicionar uma linha inferior ao título */
+}
 
-        ul {
-            list-style-type: none;
-            padding: 0;
-            width: 60%;
-        }
+ul {
+    list-style-type: none;
+    padding: 0;
+    width: 60%;
+    overflow-y: auto; /* Adicionar uma barra de rolagem vertical quando necessário */
+    max-height: 60vh; /* Definir a altura máxima da lista de agendamentos para manter o conteúdo legível */
+}
 
         li {
             background-color: #ffffff;
@@ -92,23 +101,73 @@
             <button id="noButton" onclick="cancelDelete()">No</button>
         </div>
     </div>
+
     <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var appointments = JSON.parse(localStorage.getItem('appointments'));
-        var list = document.getElementById('appointmentList');
+        function showConfirmation(index) {
+            var confirmationMessage = document.getElementById('confirmationMessage');
+            var body = document.body;
+            confirmationMessage.style.display = 'flex';
 
-        var filteredAppointments = appointments.reduce(function (acc, appointment) {
-            var existingAppointment = acc.find(function (item) {
-                return item.email === appointment.email && item.datetime.split(' ')[0] === appointment.datetime.split(' ')[0];
-            });
-            if (!existingAppointment) {
-                acc.push(appointment);
+            var overlay = document.createElement('div');
+            overlay.classList.add('overlay');
+            body.appendChild(overlay);
+
+            var yesButton = document.getElementById('yesButton');
+            yesButton.onclick = function() {
+                confirmDelete(index);
+                removeOverlay();
+            };
+            var noButton = document.getElementById('noButton');
+            noButton.onclick = function() {
+                cancelDelete();
+                removeOverlay();
+            };
+
+            overlay.onclick = function() {
+                cancelDelete();
+                removeOverlay();
+            };
+        }
+
+        function removeOverlay() {
+            var overlay = document.querySelector('.overlay');
+            if (overlay) {
+                overlay.remove();
             }
-            return acc;
-        }, []);
+        }
 
-        if (filteredAppointments.length > 0) {
-            filteredAppointments.forEach(function(appointment, index) {
+        function confirmDelete(index) {
+            var appointments = JSON.parse(localStorage.getItem('appointments'));
+            appointments.splice(index, 1);
+            localStorage.setItem('appointments', JSON.stringify(appointments));
+            location.reload();
+        }
+
+        function cancelDelete() {
+            var confirmationMessage = document.getElementById('confirmationMessage');
+            confirmationMessage.style.display = 'none';
+            location.reload();
+        }
+
+        function sortAppointmentsByDateTime(appointments) {
+            appointments.sort(function(a, b) {
+                var dateA = new Date(a.datetime);
+                var dateB = new Date(b.datetime);
+                return dateA - dateB;
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+    var appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+    console.log(appointments); // Verifique se os agendamentos estão sendo recuperados corretamente
+
+    var list = document.getElementById('appointmentList');
+
+    function updateAppointmentList() {
+        list.innerHTML = ''; // Limpar a lista
+
+        if (appointments.length > 0) {
+            appointments.forEach(function(appointment, index) {
                 var listItem = document.createElement('li');
                 var appointmentInfo = document.createElement('div');
                 appointmentInfo.classList.add('appointment-info');
@@ -138,32 +197,10 @@
             listItem.textContent = 'Nenhum agendamento encontrado.';
             list.appendChild(listItem);
         }
-    });
-
-    var appointments = JSON.parse(localStorage.getItem('appointments')) || [];
-
-    function showConfirmation(index) {
-        var confirmationMessage = document.getElementById('confirmationMessage');
-        confirmationMessage.style.display = 'flex';
-        var yesButton = document.getElementById('yesButton');
-        yesButton.onclick = function() {
-            confirmDelete(index);
-        };
-        var noButton = document.getElementById('noButton');
-        noButton.onclick = cancelDelete;
     }
 
-    function confirmDelete(index) {
-        var appointments = JSON.parse(localStorage.getItem('appointments'));
-        appointments.splice(index, 1);
-        localStorage.setItem('appointments', JSON.stringify(appointments));
-        location.reload();
-    }
-
-    function cancelDelete() {
-        var confirmationMessage = document.getElementById('confirmationMessage');
-        confirmationMessage.style.display = 'none';
-    }
+    updateAppointmentList();
+});
     </script>
 </body>
 </html>
