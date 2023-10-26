@@ -203,6 +203,72 @@ input[type="submit"]:hover {
                 }
             });
         });
+
+        document.addEventListener("DOMContentLoaded", function() {
+        var form = document.querySelector('form');
+        var datetimepicker = document.getElementById('datetimepicker');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            var nome = document.getElementById('nome').value;
+            var email = document.getElementById('email').value;
+            var datetime = datetimepicker.value;
+
+            // Verificar se já existem agendamentos no localStorage
+            var appointments = localStorage.getItem('appointments') ? JSON.parse(localStorage.getItem('appointments')) : [];
+
+            // Verificar se o horário já está agendado
+            var isTimeSlotAvailable = true;
+            appointments.forEach(function(appointment) {
+                if (appointment.datetime === datetime) {
+                    isTimeSlotAvailable = false;
+                }
+            });
+
+            // Se o horário estiver ocupado, exibir mensagem de erro
+            if (!isTimeSlotAvailable) {
+                alert('This time slot is not available! Please choose another time slot.');
+                return;
+            }
+
+            // Salvar os dados no localStorage
+            var appointment = {
+                nome: nome,
+                email: email,
+                datetime: datetime
+            };
+
+            // Adicionar o novo agendamento ao array
+            appointments.push(appointment);
+
+            // Salvar o array atualizado no localStorage
+            localStorage.setItem('appointments', JSON.stringify(appointments));
+
+            // Remover o horário indisponível do seletor
+            var selectedOption = datetimepicker.value;
+            var selectOptions = datetimepicker.getElementsByTagName('option');
+            for (var i = 0; i < selectOptions.length; i++) {
+                if (selectOptions[i].value === selectedOption) {
+                    datetimepicker.remove(i);
+                    break;
+                }
+            }
+
+            // Atualizar o seletor
+            appointments.forEach(function(appointment) {
+                var option = document.createElement("option");
+                option.text = appointment.datetime;
+                option.value = appointment.datetime;
+                datetimepicker.add(option);
+            });
+
+            alert('Agendamento salvo com sucesso!');
+
+            // Resetar o formulário
+            form.reset();
+        });
+    });
     </script>
 </body>
 </html>

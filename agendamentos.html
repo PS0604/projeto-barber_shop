@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Agendamentos</h1>
+    <ul id="appointmentList"></ul>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var appointments = JSON.parse(localStorage.getItem('appointments'));
+            var list = document.getElementById('appointmentList');
+
+            if (appointments) {
+                appointments.forEach(function(appointment) {
+                    var listItem = document.createElement('li');
+                    listItem.textContent = `Nome: ${appointment.nome}, Email: ${appointment.email}, Data e Hora: ${appointment.datetime}`;
+                    list.appendChild(listItem);
+                });
+            } else {
+                var listItem = document.createElement('li');
+                listItem.textContent = 'Nenhum agendamento encontrado.';
+                list.appendChild(listItem);
+            }
+        });
+    </script>
+</body>
+</html>
