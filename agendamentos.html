@@ -6,35 +6,35 @@
     
     <title>Agendamentos</title>
     <style>
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f2f2f2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    margin: 0;
-}
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
 
-h1 {
-    color: #333;
-    margin-bottom: 20px;
-    position: sticky; /* Manter o título fixo durante a rolagem */
-    top: 0; /* Posicionar o título no topo da página */
-    background-color: #f2f2f2; /* Adicionar um plano de fundo para o título */
-    width: 60%; /* Ajustar a largura do título */
-    padding: 10px 0; /* Adicionar preenchimento ao título */
-    border-bottom: 1px solid #ddd; /* Adicionar uma linha inferior ao título */
-}
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            position: sticky;
+            top: 0;
+            background-color: #f2f2f2;
+            width: 60%;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
 
-ul {
-    list-style-type: none;
-    padding: 0;
-    width: 60%;
-    overflow-y: auto; /* Adicionar uma barra de rolagem vertical quando necessário */
-    max-height: 60vh; /* Definir a altura máxima da lista de agendamentos para manter o conteúdo legível */
-}
+        ul {
+            list-style-type: none;
+            padding: 0;
+            width: 60%;
+            overflow-y: auto;
+            max-height: 60vh;
+        }
 
         li {
             background-color: #ffffff;
@@ -68,16 +68,18 @@ ul {
         }
 
         #confirmationMessage {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             background-color: #f9f9f9;
             border: 1px solid #ddd;
             padding: 20px;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-top: 20px;
+            text-align: center; /* Adiciona o texto ao centro */
+            z-index: 1;
         }
 
         #confirmationMessage p {
@@ -85,19 +87,33 @@ ul {
         }
 
         #confirmationMessage div {
-            display: flex;
-            gap: 10px;
+            margin-top: 10px;
+        }
+
+        #confirmationMessage button {
+            margin: 5px;
+        }
+
+        .overlay {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 0;
         }
     </style>
 </head>
 <body>
     <h1>Agendamentos</h1>
     <ul id="appointmentList"></ul>
-
-    <div id="confirmationMessage" style="display: none;">
+    <div id="confirmationMessage">
         <p>Are you sure you want to delete this appointment?</p>
         <div>
             <button id="yesButton">Yes</button>
+        </div>
+        <div>
             <button id="noButton" onclick="cancelDelete()">No</button>
         </div>
     </div>
@@ -105,8 +121,8 @@ ul {
     <script>
         function showConfirmation(index) {
             var confirmationMessage = document.getElementById('confirmationMessage');
-            var body = document.body;
             confirmationMessage.style.display = 'flex';
+            var body = document.body;
 
             var overlay = document.createElement('div');
             overlay.classList.add('overlay');
@@ -146,7 +162,6 @@ ul {
         function cancelDelete() {
             var confirmationMessage = document.getElementById('confirmationMessage');
             confirmationMessage.style.display = 'none';
-            location.reload();
         }
 
         function sortAppointmentsByDateTime(appointments) {
@@ -158,49 +173,47 @@ ul {
         }
 
         document.addEventListener("DOMContentLoaded", function() {
-    var appointments = JSON.parse(localStorage.getItem('appointments')) || [];
-    console.log(appointments); // Verifique se os agendamentos estão sendo recuperados corretamente
+            var appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+            var list = document.getElementById('appointmentList');
 
-    var list = document.getElementById('appointmentList');
+            function updateAppointmentList() {
+                list.innerHTML = '';
 
-    function updateAppointmentList() {
-        list.innerHTML = ''; // Limpar a lista
+                if (appointments.length > 0) {
+                    appointments.forEach(function(appointment, index) {
+                        var listItem = document.createElement('li');
+                        var appointmentInfo = document.createElement('div');
+                        appointmentInfo.classList.add('appointment-info');
+                        var name = document.createElement('p');
+                        name.textContent = `Nome: ${appointment.nome}`;
+                        var email = document.createElement('p');
+                        email.textContent = `Email: ${appointment.email}`;
+                        var date = document.createElement('p');
+                        date.textContent = `Data: ${appointment.datetime.split(' ')[0]}`;
+                        var time = document.createElement('p');
+                        time.textContent = `Hora: ${appointment.datetime.split(' ')[1]}`;
+                        var deleteButton = document.createElement('button');
+                        deleteButton.textContent = 'Delete';
+                        deleteButton.onclick = function() {
+                            showConfirmation(index);
+                        };
+                        appointmentInfo.appendChild(name);
+                        appointmentInfo.appendChild(email);
+                        appointmentInfo.appendChild(date);
+                        appointmentInfo.appendChild(time);
+                        listItem.appendChild(appointmentInfo);
+                        listItem.appendChild(deleteButton);
+                        list.appendChild(listItem);
+                    });
+                } else {
+                    var listItem = document.createElement('li');
+                    listItem.textContent = 'Nenhum agendamento encontrado.';
+                    list.appendChild(listItem);
+                }
+            }
 
-        if (appointments.length > 0) {
-            appointments.forEach(function(appointment, index) {
-                var listItem = document.createElement('li');
-                var appointmentInfo = document.createElement('div');
-                appointmentInfo.classList.add('appointment-info');
-                var name = document.createElement('p');
-                name.textContent = `Nome: ${appointment.nome}`;
-                var email = document.createElement('p');
-                email.textContent = `Email: ${appointment.email}`;
-                var date = document.createElement('p');
-                date.textContent = `Data: ${appointment.datetime.split(' ')[0]}`;
-                var time = document.createElement('p');
-                time.textContent = `Hora: ${appointment.datetime.split(' ')[1]}`;
-                var deleteButton = document.createElement('button');
-                deleteButton.textContent = 'Delete';
-                deleteButton.onclick = function() {
-                    showConfirmation(index);
-                };
-                appointmentInfo.appendChild(name);
-                appointmentInfo.appendChild(email);
-                appointmentInfo.appendChild(date);
-                appointmentInfo.appendChild(time);
-                listItem.appendChild(appointmentInfo);
-                listItem.appendChild(deleteButton);
-                list.appendChild(listItem);
-            });
-        } else {
-            var listItem = document.createElement('li');
-            listItem.textContent = 'Nenhum agendamento encontrado.';
-            list.appendChild(listItem);
-        }
-    }
-
-    updateAppointmentList();
-});
+            updateAppointmentList();
+        });
     </script>
 </body>
 </html>
