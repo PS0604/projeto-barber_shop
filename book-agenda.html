@@ -249,7 +249,7 @@ input[type="submit"]:hover {
         </div>
     </header>
 
-    <form action="" method="post">
+    <form id="appointementForm" action="confirmation.html" method="post">
         <h1>Make an Appointement</h1>
         <label for="nome">Name:</label>
         <input type="text" id="nome" name="nome" required placeholder="REQUIRED">
@@ -260,10 +260,13 @@ input[type="submit"]:hover {
         <input type="submit" value="Submit">
     </form>
 
+    <div id="confirmationMessage" style="display: none;">
+        <p>Appointment Confirmed!</p>
+    </div>
+
     <script>
     document.addEventListener("DOMContentLoaded", function() {
-        var form = document.querySelector('form');
-        var emailInput = document.getElementById('email');
+        var form = document.getElementById('appointmentForm');
         var datetimepicker = document.getElementById('datetimepicker');
         var appointments = JSON.parse(localStorage.getItem('appointments')) || [];
 
@@ -277,51 +280,54 @@ input[type="submit"]:hover {
         });
 
         form.addEventListener('submit', function(e) {
-            e.preventDefault();
+    e.preventDefault();
 
-            var nome = document.getElementById('nome').value;
-            var email = document.getElementById('email').value.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-            var datetime = datetimepicker.value;
+    var nome = document.getElementById('nome').value;
+    var email = document.getElementById('email').value.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    var datetime = datetimepicker.value;
 
-            if (!nome.trim() || !email.trim()) {
-                alert('Por favor, preencha todos os campos.');
-                return;
-            }
+    if (!nome.trim() || !email.trim()) {
+        alert('Por favor, preencha todos os campos.');
+        return;
+    }
 
-            if (/[^\w.@]/.test(email)) {
-                alert('O e-mail não deve conter caracteres especiais, exceto . e @.');
-                return;
-            }
+    if (/[^\w.@]/.test(email)) {
+        alert('O e-mail não deve conter caracteres especiais, exceto . e @.');
+        return;
+    }
 
-            var newAppointment = {
-                nome: nome,
-                email: email,
-                datetime: datetime
-            };
+    var newAppointment = {
+        nome: nome,
+        email: email,
+        datetime: datetime
+    };
 
-            var existingAppointment = appointments.find(function(appointment) {
-                return appointment.email === email && appointment.datetime.split(' ')[0] === datetime.split(' ')[0];
-            });
+    var existingAppointmentsOnDay = appointments.filter(function(appointment) {
+        var appointmentDateTime = new Date(appointment.datetime);
+        var newAppointmentDateTime = new Date(datetime);
+        return (
+            appointmentDateTime.getFullYear() === newAppointmentDateTime.getFullYear() &&
+            appointmentDateTime.getMonth() === newAppointmentDateTime.getMonth() &&
+            appointmentDateTime.getDate() === newAppointmentDateTime.getDate()
+        );
+    });
 
-            if (existingAppointment) {
-                alert('Já existe um agendamento com este e-mail para esta data. Escolha uma data diferente.');
-                return;
-            }
+    var time = datetime.split(' ')[1].split(':');
+    var minutes = time[1];
+    if (time[0] < 9 || time[0] >= 18 || (minutes !== '00' && minutes !== '30') || existingAppointmentsOnDay.some(function(appointment) {
+        return appointment.datetime.split(' ')[1] === datetime.split(' ')[1];
+    })) {
+        alert('Por favor, escolha um horário entre 9h e 18h, em intervalos de 30 minutos ou em um horário disponível.');
+        return;
+    }
 
-            var time = datetime.split(' ')[1].split(':');
-            var minutes = time[1];
-            if (time[0] < 9 || time[0] >= 18 || (minutes !== '00' && minutes !== '30')) {
-                alert('Por favor, escolha um horário entre 9h e 18h, em intervalos de 30 minutos.');
-                return;
-            }
+    appointments.push(newAppointment);
 
-            appointments.push(newAppointment);
+    localStorage.setItem('appointments', JSON.stringify(appointments));
 
-            localStorage.setItem('appointments', JSON.stringify(appointments));
-
-            // Atualizar os horários disponíveis imediatamente
-            updateAvailableTimes();
-        });
+    // Atualizar os horários disponíveis imediatamente
+    updateAvailableTimes();
+});
 
         function getAvailableTimes() {
             var times = [];
