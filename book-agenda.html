@@ -307,9 +307,6 @@ input[type="submit"]:hover {
         var closeButton = document.getElementById('closeButton')
         closeButton.addEventListener('click', hideSuccessMessage);
 
-        var overlay = document.getElementById('overlay');
-        overlay.addEventListener('click', hideSuccessMessage);
-
         function initializeDateTimePicker() {
             $(datetimepicker).datetimepicker({
                 format: 'd-m-Y H:i',
