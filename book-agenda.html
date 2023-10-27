@@ -255,6 +255,23 @@ input[type="submit"]:hover {
         <input type="text" id="nome" name="nome" required placeholder="REQUIRED">
         <label for="email">E-Mail:</label>
         <input type="email" id="email" name="email" required placeholder="REQUIRED">
+        <label for="service">Service:</label>
+        <select id="service" name="service">
+            <optgroup label="For Him">
+                <option value="Haircut">Haircut - from 28€</option>
+                <option value="Color cut">Color cut - from 60€</option>
+                <option value="Beard size">Beard size - from 12€</option>
+                <option value="Permanently MEN">Permanently MEN - from 30€</option>
+                <option value="Styling Men - Kids">Styling Men - Kids - from 5€</option>
+            </optgroup>
+            <optgroup label="For Her">
+                <option value="Blow-drying">Blow-drying - from 30€</option>
+                <option value="Haircut blow-drying">Haircut blow-drying - from 50€</option>
+                <option value="Full head tint, cut, blow-drying">Full head tint, cut, blow-drying - from 75€</option>
+                <option value="Sun flash, cut, blow-drying">Sun flash, cut, blow-drying - from 95€</option>
+                <option value="Foils hightlights, cut, blow-drying">Foils hightlights, cut, blow-drying - from 110€</option>
+            </optgroup>
+        </select>
         <label for="datetimepicker">Date & Time:</label><span id="datetimeError" style="color: red;"></span>
         <input type="text" id="datetimepicker" name="datetime" required placeholder="REQUIRED">
         <input type="submit" value="Submit">
@@ -266,6 +283,18 @@ input[type="submit"]:hover {
 
     <script>
     document.addEventListener("DOMContentLoaded", function() {
+            // Preencher dinamicamente o seletor de serviço
+    var serviceSelector = document.getElementById('service');
+    var services = document.querySelectorAll('.services h1');
+
+    services.forEach(function(service) {
+        var option = document.createElement('option');
+        option.value = service.textContent;
+        option.textContent = service.textContent;
+        serviceSelector.appendChild(option);
+    });
+});
+
         var form = document.getElementById('appointmentForm');
         var datetimepicker = document.getElementById('datetimepicker');
         var appointments = JSON.parse(localStorage.getItem('appointments')) || [];
@@ -417,7 +446,6 @@ input[type="submit"]:hover {
             var confirmationMessage = document.getElementById('confirmationMessage');
             confirmationMessage.style.display = 'none';
         }
-    });
     </script>
 </body>
 </html>
