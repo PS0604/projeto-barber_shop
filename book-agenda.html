@@ -161,30 +161,6 @@ input[type="submit"]:hover {
             color: red;
         }
         
-        .error-message {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 9999;
-        }
-
-        .error-message p {
-            color: white;
-            font-size: 20px;
-            text-align: center;
-            max-width: 80%;
-            background-color: #f44336;
-            padding: 20px;
-            border-radius: 5px;
-        }
-
         @media screen and (max-width: 600px) {
             /* Adicione suas regras de estilo para dispositivos com largura máxima de 600px aqui */
             body {
@@ -249,132 +225,102 @@ input[type="submit"]:hover {
         </div>
     </header>
 
-    <form id="appointementForm" action="confirmation.html" method="post">
+    <form action="" method="post">
         <h1>Make an Appointement</h1>
         <label for="nome">Name:</label>
         <input type="text" id="nome" name="nome" required placeholder="REQUIRED">
         <label for="email">E-Mail:</label>
         <input type="email" id="email" name="email" required placeholder="REQUIRED">
-        <label for="service">Service:</label>
-        <select id="service" name="service">
-            <optgroup label="For Him">
-                <option value="Haircut">Haircut - from 28€</option>
-                <option value="Color cut">Color cut - from 60€</option>
-                <option value="Beard size">Beard size - from 12€</option>
-                <option value="Permanently MEN">Permanently MEN - from 30€</option>
-                <option value="Styling Men - Kids">Styling Men - Kids - from 5€</option>
-            </optgroup>
-            <optgroup label="For Her">
-                <option value="Blow-drying">Blow-drying - from 30€</option>
-                <option value="Haircut blow-drying">Haircut blow-drying - from 50€</option>
-                <option value="Full head tint, cut, blow-drying">Full head tint, cut, blow-drying - from 75€</option>
-                <option value="Sun flash, cut, blow-drying">Sun flash, cut, blow-drying - from 95€</option>
-                <option value="Foils hightlights, cut, blow-drying">Foils hightlights, cut, blow-drying - from 110€</option>
-            </optgroup>
-        </select>
         <label for="datetimepicker">Date & Time:</label><span id="datetimeError" style="color: red;"></span>
         <input type="text" id="datetimepicker" name="datetime" required placeholder="REQUIRED">
         <input type="submit" value="Submit">
     </form>
 
-    <div id="confirmationMessage" style="display: none;">
-        <p>Appointment Confirmed!</p>
-    </div>
-
     <script>
-    document.addEventListener("DOMContentLoaded", function() {
-            // Preencher dinamicamente o seletor de serviço
-    var serviceSelector = document.getElementById('service');
-    var services = document.querySelectorAll('.services h1');
-
-    services.forEach(function(service) {
-        var option = document.createElement('option');
-        option.value = service.textContent;
-        option.textContent = service.textContent;
-        serviceSelector.appendChild(option);
-    });
-});
-
-        var form = document.getElementById('appointmentForm');
+    document.addEventListener("DOMContentLoaded", function () {
+        var form = document.querySelector('form');
+        var emailInput = document.getElementById('email');
         var datetimepicker = document.getElementById('datetimepicker');
         var appointments = JSON.parse(localStorage.getItem('appointments')) || [];
 
-        $(datetimepicker).datetimepicker({
-            format: 'Y-m-d H:i',
-            formatDate: 'Y-m-d',
-            formatTime: 'H:i',
-            minDate: 0,
-            step: 30,
-            allowTimes: getAvailableTimes()
+        function initializeDateTimePicker() {
+            $(datetimepicker).datetimepicker({
+                format: 'Y-m-d H:i',
+                formatDate: 'Y-m-d',
+                formatTime: 'H:i',
+                minDate: 0,
+                step: 30,
+                allowTimes: getAvailableTimes()
+            });
+
+            datetimepicker.addEventListener("change", function () {
+                $(datetimepicker).datetimepicker("setOptions", { allowTimes: getAvailableTimes() });
+            });
+        }
+
+        initializeDateTimePicker();
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            var nome = document.getElementById('nome').value;
+            var email = document.getElementById('email').value.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+            var datetime = datetimepicker.value;
+
+            if (!nome.trim() || !email.trim()) {
+                alert('Por favor, preencha todos os campos.');
+                return;
+            }
+
+            if (/[^\w.@]/.test(email)) {
+                alert('O e-mail não deve conter caracteres especiais, exceto . e @.');
+                return;
+            }
+
+            var dateToCheck = datetime.split(' ')[0];
+            var timeToCheck = datetime.split(' ')[1];
+
+            var conflictingAppointment = appointments.find(function (appointment) {
+                return appointment.datetime.split(' ')[0] === dateToCheck && appointment.datetime.split(' ')[1] === timeToCheck;
+            });
+
+            if (conflictingAppointment) {
+                alert('Este horário já está agendado. Por favor, escolha outro horário.');
+                return;
+            }
+
+            var newAppointment = {
+                nome: nome,
+                email: email,
+                datetime: datetime
+            };
+
+            appointments.push(newAppointment);
+
+            localStorage.setItem('appointments', JSON.stringify(appointments));
+
+            updateAvailableTimes();
         });
-
-        form.addEventListener('submit', function(e) {
-    e.preventDefault();
-
-    var nome = document.getElementById('nome').value;
-    var email = document.getElementById('email').value.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-    var datetime = datetimepicker.value;
-
-    if (!nome.trim() || !email.trim()) {
-        alert('Por favor, preencha todos os campos.');
-        return;
-    }
-
-    if (/[^\w.@]/.test(email)) {
-        alert('O e-mail não deve conter caracteres especiais, exceto . e @.');
-        return;
-    }
-
-    var newAppointment = {
-        nome: nome,
-        email: email,
-        datetime: datetime
-    };
-
-    var existingAppointmentsOnDay = appointments.filter(function(appointment) {
-        var appointmentDateTime = new Date(appointment.datetime);
-        var newAppointmentDateTime = new Date(datetime);
-        return (
-            appointmentDateTime.getFullYear() === newAppointmentDateTime.getFullYear() &&
-            appointmentDateTime.getMonth() === newAppointmentDateTime.getMonth() &&
-            appointmentDateTime.getDate() === newAppointmentDateTime.getDate()
-        );
-    });
-
-    var time = datetime.split(' ')[1].split(':');
-    var minutes = time[1];
-    if (time[0] < 9 || time[0] >= 18 || (minutes !== '00' && minutes !== '30') || existingAppointmentsOnDay.some(function(appointment) {
-        return appointment.datetime.split(' ')[1] === datetime.split(' ')[1];
-    })) {
-        alert('Por favor, escolha um horário entre 9h e 18h, em intervalos de 30 minutos ou em um horário disponível.');
-        return;
-    }
-
-    appointments.push(newAppointment);
-
-    localStorage.setItem('appointments', JSON.stringify(appointments));
-
-    // Atualizar os horários disponíveis imediatamente
-    updateAvailableTimes();
-});
 
         function getAvailableTimes() {
             var times = [];
+            var selectedDate = datetimepicker.value.split(" ")[0];
             for (var hour = 9; hour < 18; hour++) {
-                times.push(formatTime(hour, 0));
-                times.push(formatTime(hour, 30));
-            }
-
-            appointments.forEach(function(appointment) {
-                var dateTimeComponents = appointment.datetime.split(' ');
-                var date = dateTimeComponents[0];
-                var time = dateTimeComponents[1];
-                var index = times.indexOf(time);
-                if (index > -1) {
-                    times.splice(index, 1);
+                var time1 = formatTime(hour, 0);
+                var time2 = formatTime(hour, 30);
+                var isAvailable = true;
+                appointments.forEach(function (appointment) {
+                    var appointmentDate = appointment.datetime.split(' ')[0];
+                    var appointmentTime = appointment.datetime.split(' ')[1];
+                    if (appointmentDate === selectedDate && (appointmentTime === time1 || appointmentTime === time2)) {
+                        isAvailable = false;
+                    }
+                });
+                if (isAvailable) {
+                    times.push(time1);
+                    times.push(time2);
                 }
-            });
-
+            }
             return times;
         }
 
@@ -385,7 +331,7 @@ input[type="submit"]:hover {
         function updateAvailableTimes() {
             var availableTimes = getAvailableTimes();
             var options = '';
-            availableTimes.forEach(function(time) {
+            availableTimes.forEach(function (time) {
                 options += '<option value="' + time + '">' + time + '</option>';
             });
             datetimepicker.innerHTML = options;
@@ -446,6 +392,7 @@ input[type="submit"]:hover {
             var confirmationMessage = document.getElementById('confirmationMessage');
             confirmationMessage.style.display = 'none';
         }
+    });
     </script>
 </body>
 </html>
