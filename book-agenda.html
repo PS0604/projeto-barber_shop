@@ -225,6 +225,15 @@ input[type="submit"]:hover {
         </div>
     </header>
 
+    <div id="successMessage" style="display: none;">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Sucesso!</h5>
+                <p class="card-text">Seu agendamento foi salvo com sucesso.</p>
+            </div>
+        </div>
+    </div>
+
     <form action="" method="post">
         <h1>Make an Appointement</h1>
         <label for="nome">Name:</label>
@@ -300,6 +309,8 @@ input[type="submit"]:hover {
             localStorage.setItem('appointments', JSON.stringify(appointments));
 
             updateAvailableTimes();
+
+            showSuccesMessage ();
         });
 
         function getAvailableTimes() {
@@ -391,6 +402,14 @@ input[type="submit"]:hover {
         function cancelDelete() {
             var confirmationMessage = document.getElementById('confirmationMessage');
             confirmationMessage.style.display = 'none';
+        }
+
+        function showSuccesMessage() {
+            var successMessage = document.getElementById('successMessage');
+            successMessage.style.display = 'block';
+            setTimeout(function() {
+                successMessage.style.display = 'none';
+            }, 3000); //3 segundos
         }
     });
     </script>
