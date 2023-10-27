@@ -194,13 +194,13 @@
                         var appointmentInfo = document.createElement('div');
                         appointmentInfo.classList.add('appointment-info');
                         var name = document.createElement('p');
-                        name.textContent = `Nome: ${appointment.nome} ${appointment['last-name']}`
+                        name.textContent = `Name: ${appointment.nome} ${appointment['last-name']}`
                         var email = document.createElement('p');
                         email.textContent = `Email: ${appointment.email}`;
                         var date = document.createElement('p');
-                        date.textContent = `Data: ${appointment.datetime.split(' ')[0]}`;
+                        date.textContent = `Date: ${appointment.datetime.split(' ')[0]}`;
                         var time = document.createElement('p');
-                        time.textContent = `Hora: ${appointment.datetime.split(' ')[1]}`;
+                        time.textContent = `Time: ${appointment.datetime.split(' ')[1]}`;
                         var deleteButton = document.createElement('button');
                         deleteButton.textContent = 'Delete';
                         deleteButton.onclick = function() {
