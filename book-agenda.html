@@ -290,8 +290,17 @@ input[type="submit"]:hover {
 
     <form action="" method="post">
         <h1>Make an Appointement</h1>
-        <label for="nome">Name:</label>
-        <input type="text" id="nome" name="nome" required placeholder="REQUIRED">
+        <div style="display: flex; align-items: center;">
+            <div style="flex: 1;">
+                <label for="nome">First Name:</label>
+                <input type="text" id="nome" name="nome" required placeholder="REQUIRED">
+            </div>
+            <div style="width: 10px;"></div> <!-- Spacer -->
+            <div style="flex: 1;">
+                <label for="last-name">Last Name:</label>
+                <input type="text" id="last-name" name="last-name" required placeholder="REQUIRED">
+            </div>
+        </div>
         <label for="email">E-Mail:</label>
         <input type="email" id="email" name="email" required placeholder="REQUIRED">
         <label for="datetimepicker">Date & Time:</label><span id="datetimeError" style="color: red;"></span>
@@ -329,6 +338,7 @@ input[type="submit"]:hover {
             e.preventDefault();
 
             var nome = document.getElementById('nome').value;
+            var lastName = document.getElementById('last-name').value;
             var email = document.getElementById('email').value.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
             var datetime = datetimepicker.value;
 
@@ -356,6 +366,7 @@ input[type="submit"]:hover {
 
             var newAppointment = {
                 nome: nome,
+                'last-name': lastName,
                 email: email,
                 datetime: datetime
             };

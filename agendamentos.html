@@ -49,8 +49,17 @@
 
         .appointment-info {
             display: flex;
+            justify-content: space-between;
             flex-direction: column;
             gap: 10px;
+        }
+
+        .name-info {
+            display: flex;
+        }
+
+        .name-info p {
+            margin-right: 10px;
         }
 
         button {
@@ -185,7 +194,7 @@
                         var appointmentInfo = document.createElement('div');
                         appointmentInfo.classList.add('appointment-info');
                         var name = document.createElement('p');
-                        name.textContent = `Nome: ${appointment.nome}`;
+                        name.textContent = `Nome: ${appointment.nome} ${appointment['last-name']}`
                         var email = document.createElement('p');
                         email.textContent = `Email: ${appointment.email}`;
                         var date = document.createElement('p');
