@@ -160,7 +160,7 @@ input[type="submit"]:hover {
             content: '*';
             color: red;
         }
-        
+
         @media screen and (max-width: 600px) {
             /* Adicione suas regras de estilo para dispositivos com largura máxima de 600px aqui */
             body {
@@ -216,6 +216,32 @@ input[type="submit"]:hover {
                 font-size: 24px;
             }
         }
+
+        #successMessage {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #4CAF50;
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        z-index: 1;
+    }
+
+    
+    #successMessage.show {
+        display: block;
+        animation: fadeOut 3s ease;
+    }
+
+    
+    @keyframes fadeOut {
+        0% { opacity: 1; }
+        90% { opacity: 1; }
+        100% { opacity: 0; }
+    }
     </style>
 </head>
 <body>
@@ -254,8 +280,8 @@ input[type="submit"]:hover {
 
         function initializeDateTimePicker() {
             $(datetimepicker).datetimepicker({
-                format: 'Y-m-d H:i',
-                formatDate: 'Y-m-d',
+                format: 'd-m-Y H:i',
+                formatDate: 'd-m-Y',
                 formatTime: 'H:i',
                 minDate: 0,
                 step: 30,
@@ -409,7 +435,7 @@ input[type="submit"]:hover {
             successMessage.style.display = 'block';
             setTimeout(function() {
                 successMessage.style.display = 'none';
-            }, 3000); //3 segundos
+            }, 3000); // 3 segundos
         }
     });
     </script>
