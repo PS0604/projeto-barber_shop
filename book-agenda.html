@@ -115,7 +115,7 @@ input[type="submit"] {
 }
 
 input[type="submit"]:hover {
-    background-color: var(--cor4);
+    background-color: #663822;
 }
 
 .xdsoft_datetimepicker {
@@ -222,10 +222,11 @@ input[type="submit"]:hover {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        background-color: #4CAF50;
-        color: white;
+        background-color: #6d4e2e;
+        color: black;
+        font-weight: bold;
         padding: 20px;
-        border-radius: 10px;
+        border-radius: 30px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         z-index: 2;
     }
@@ -244,16 +245,16 @@ input[type="submit"]:hover {
     }
 
     #closeButton {
-        background-color: #555;
+        background-color: var(--cor0);
         color: white;
         padding: 10px 15px;
         border: none;
-        border-radius: 5px;
+        border-radius: 10px;
         cursor: pointer;
     }
 
     #closeButton:hover {
-        background-color: #333;
+        background-color: #663822;
     }
 
     #overlay {
@@ -280,8 +281,8 @@ input[type="submit"]:hover {
     <div id="successMessage" style="display: none;">
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Sucesso!</h5>
-                <p class="card-text">Seu agendamento foi salvo com sucesso.</p>
+                <h5 class="card-title">Congratulations!</h5>
+                <p class="card-text">Your Appointement has been successfully saved.</p>
                 <button id="closeButton" onclick="hideSuccessMessage()">Close</button>
             </div>
         </div>
